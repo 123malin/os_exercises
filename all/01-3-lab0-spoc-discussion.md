@@ -105,7 +105,7 @@ O. 根据服务器的地址创建本地git与服务器的地址关联
 ```#define SETGATE(gate, istrap, sel, off, dpl) {            \    (gate).gd_off_15_0 = (uint32_t)(off) & 0xffff;        \    (gate).gd_ss = (sel);                                \    (gate).gd_args = 0;                                    \    (gate).gd_rsv1 = 0;                                    \    (gate).gd_type = (istrap) ? STS_TG32 : STS_IG32;    \    (gate).gd_s = 0;                                    \    (gate).gd_dpl = (dpl);                                \    (gate).gd_p = 1;                                    \    (gate).gd_off_31_16 = (uint32_t)(off) >> 16;        \}```如果在其他代码段中有如下语句，```unsigned intr;intr=8;SETGATE(intr, 0,1,2,3);```请问执行上述指令后， intr的值是多少？
 - [x]   
 
-> 261683767476226
+> 65538
 
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
 - [x] 
