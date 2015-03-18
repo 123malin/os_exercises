@@ -13,9 +13,6 @@ NOTICE
 ---
 
 （1） (w3l2) 请简要分析64bit CPU体系结构下的分页机制是如何实现的
-	答：在x64下，理论上是可以通过使用PAE分页结构支持64bit的线性地址到52位物理地址的映射的，但在对这一架构的首次实现中，只实现了48位的线性地址到40位物理地址的映射，所以我觉得实际中64bitCPU支持的物理内存应该没有2^64那么大，大概是以T位单位，网上有地方写是有8T。
-	同时x64体系结构下从虚拟地址到物理地址的转换中用到了四级页数据结构，PML4，PDP，PDE，PTE，虚拟地址的高16位保留用以进行符号扩展，接下来的9位PML4的索引（PML4其基地址存放在CR3），9位为PDP的索引，9位为PDE的索引，9位为PTE的索引，最后12位为页内偏移，虚拟地址到物理地址的转换就跟多级页表的转换一样。
-	
 ```
   + 采分点：说明64bit CPU架构的分页机制的大致特点和页表执行过程
   - 答案没有涉及如下3点；（0分）
@@ -25,7 +22,7 @@ NOTICE
  ```
 - [x]  
 
->  
+>  答：在x64下，理论上是可以通过使用PAE分页结构支持64bit的线性地址到52位物理地址的映射的，但在对这一架构的首次实现中，只实现了48位的线性地址到40位物理地址的映射，所以我觉得实际中64bitCPU支持的物理内存应该没有2^64那么大，大概是以T位单位，网上有地方写是有8T。同时x64体系结构下从虚拟地址到物理地址的转换中用到了四级页数据结构，PML4，PDP，PDE，PTE，虚拟地址的高16位保留用以进行符号扩展，接下来的9位PML4的索引（PML4其基地址存放在CR3），9位为PDP的索引，9位为PDE的索引，9位为PTE的索引，最后12位为页内偏移，虚拟地址到物理地址的转换就跟多级页表的转换一样。
 
 ## 小组思考题
 ---
@@ -82,48 +79,46 @@ Virtual Address 7268:
   --> pde index:0x1c  pde contents:(valid 1, pfn 0x5e)
     --> pte index:0x13  pte contents:(valid 1, pfn 0x65)
       --> Translates to Physical Address 0xca8 --> Value: 16
-      
-	 答：Virtual Address 6c74:
-		  --> pde index:0x1b  pde contents:(valid 1, pfn 0x20)
-		   --> pte index:0x3  pte contents:(valid 1, pfn 0x61)
-		    --> Translates to Physical Address 0x6114 --> Value:6
-		Virtual Address 6b22:
-		 --> pde index:0x1a  pde contents:(valid 1, pfn 0x52)
-		  --> pte index:0x19  pte contents:(valid 1, pfn 0x47)
-		   --> Translates to Physical Address 0x4702 --> Value:1a
-		Virtual Address 3df:
-		 --> pde index:0x0  pde contents:(valid 1, pfn 0x5a)
-		  --> pte index:0x1e  pte contents:(valid 1, pfn 0x5)
-		   --> Translates to Physical Address 0x51f --> Value:f
-		Virtual Address 69dc:
-		 --> pde index:0x1a  pde contents:(valid 1, pfn 0x52)
-		  --> pte index:0xe  pte contents:(valid 0, pfn 0x7f)
-		   Fault (page directory entry not valid)
-		Virtual Address 317a:
-		 --> pde index:0xc  pde contents:(valid 1, pfn 0x18)
-		  --> pte index:0xb  pte contents:(valid 1, pfn 0x35)
-		   --> Translates to Physical Address 0x351a --> Value:1e
-		Virtual Address 4546:
-		 --> pde index:0x11  pde contents:(valid 1, pfn 0x21)
-		  --> pte index:0xa  pte contents:(valid 0, pfn 0x7f)
-		   Fault (page directory entry not valid)
-		Virtual Address 2c03:
-		 --> pde index:0xb  pde contents:(valid 1, pfn 0x44)
-		  --> pte index:0x0  pte contents:(valid 1, pfn 0x57)
-		   --> Translates to Physical Address 0x5703 --> Value:16
-		Virtual Address 7fd7:
-		 --> pde index:0x1f  pde contents:(valid 1, pfn 0x12)
-		  --> pte index:0x1e  pte contents:(valid 0, pfn 0x7f)
-		   Fault (page directory entry not valid)
-		Virtual Address 390e:
-		 --> pde index:0xe  pde contents:(valid 0, pfn 0x7f)
-		  Fault (page directory entry not valid)
-		Virtual Address 748b:
-		 --> pde index:0x1d  pde contents:(valid 1, pfn 0x0)
-		  --> pte index:0x4  pte contents:(valid 0, pfn 0x7f)
-		   Fault (page directory entry not valid)
 ```
-
+> 答：Virtual Address 6c74:
+	--> pde index:0x1b  pde contents:(valid 1, pfn 0x20)
+	--> pte index:0x3  pte contents:(valid 1, pfn 0x61)
+	--> Translates to Physical Address 0x6114 --> Value:6
+      Virtual Address 6b22:
+	--> pde index:0x1a  pde contents:(valid 1, pfn 0x52)
+	--> pte index:0x19  pte contents:(valid 1, pfn 0x47)
+	--> Translates to Physical Address 0x4702 --> Value:1a
+      Virtual Address 3df:
+	-> pde index:0x0  pde contents:(valid 1, pfn 0x5a)
+	--> pte index:0x1e  pte contents:(valid 1, pfn 0x5)
+	--> Translates to Physical Address 0x51f --> Value:f
+      Virtual Address 69dc:
+	--> pde index:0x1a  pde contents:(valid 1, pfn 0x52)
+	--> pte index:0xe  pte contents:(valid 0, pfn 0x7f)
+	Fault (page directory entry not valid)
+      Virtual Address 317a:
+	--> pde index:0xc  pde contents:(valid 1, pfn 0x18)
+	--> pte index:0xb  pte contents:(valid 1, pfn 0x35)
+	--> Translates to Physical Address 0x351a --> Value:1e
+      Virtual Address 4546:
+	--> pde index:0x11  pde contents:(valid 1, pfn 0x21)
+	--> pte index:0xa  pte contents:(valid 0, pfn 0x7f)
+	Fault (page directory entry not valid)
+      Virtual Address 2c03:
+	--> pde index:0xb  pde contents:(valid 1, pfn 0x44)
+	--> pte index:0x0  pte contents:(valid 1, pfn 0x57)
+	--> Translates to Physical Address 0x5703 --> Value:16
+      Virtual Address 7fd7:
+	--> pde index:0x1f  pde contents:(valid 1, pfn 0x12)
+	--> pte index:0x1e  pte contents:(valid 0, pfn 0x7f)
+	Fault (page directory entry not valid)
+      Virtual Address 390e:
+	--> pde index:0xe  pde contents:(valid 0, pfn 0x7f)
+	Fault (page directory entry not valid)
+      Virtual Address 748b:
+	--> pde index:0x1d  pde contents:(valid 1, pfn 0x0)
+	--> pte index:0x4  pte contents:(valid 0, pfn 0x7f)
+	Fault (page directory entry not valid)
 
 
 （3）请基于你对原理课二级页表的理解，并参考Lab2建页表的过程，设计一个应用程序（可基于python, ruby, C, C++，LISP等）可模拟实现(2)题中描述的抽象OS，可正确完成二级页表转换。
