@@ -35,6 +35,36 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+```
+在linux上运行上述命令，执行结果如下：
+10485760 count computing over!
+
+real	0m0.045s
+user	0m0.040s
+sys	0m0.004s
+修改代码，交换i和j顺序，代码如下：
+
+#include <stdio.h>
+#define NUM 1024
+#define COUNT 10
+int A[NUM][NUM];
+void main (void) {
+  int i,j,k;
+  for (k = 0; k<COUNT; k++)
+  for (i = 0; i < NUM; i++)
+  for (j = 0; j	 < NUM; j++)
+      A[j][i] = i+j;
+  printf("%d count computing over!\n",i*j*k);
+}
+执行结果为：
+10485760 count computing over!
+
+real	0m0.206s
+user	0m0.202s
+sys	0m0.004s
+明显执行时间比第一个程序长，说明linux上数组以行为块进行存储
+```
+
 ## 小组思考题目
 ----
 
@@ -103,3 +133,4 @@ Virtual Address 106f:
 ## 扩展思考题
 ---
 (1)请分析原理课的缺页异常的处理流程与lab3中的缺页异常的处理流程（分析粒度到函数级别）的异同之处。
+
