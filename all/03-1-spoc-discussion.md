@@ -31,7 +31,127 @@ buddy system分配算法的优点是：1.处理内碎片问题较出色，可以
 
 请参考ucore lab2代码，采用`struct pmm_manager` 根据你的`学号 mod 4`的结果值，选择四种（0:最优匹配，1:最差匹配，2:最先匹配，3:buddy systemm）分配算法中的一种或多种，在应用程序层面(可以 用python,ruby,C++，C，LISP等高语言)来实现，给出你的设思路，并给出测试用例。 (spoc)
 
+> 代码如下
 
+```
+#include <iostream>
+
+using namespace std;
+
+struct block
+{
+	int start;         //起始地址 
+	int size;         //大小
+	bool is_used;
+	 block *prev,*next; 
+};
+
+block *first = new block;
+void mm_init(int start, int size)
+{
+	first -> start = start;
+	first -> size = size;
+	first -> is_used = false;
+	first -> prev = NULL;
+	first -> next = NULL;
+}
+
+block* malloc(int size)
+{
+	block *p = first, *res = NULL;
+	int free_max = -1;
+	
+	while(p!=NULL)
+	{
+		if((p->size > free_max) && (p->is_used == false))
+		{
+			free_max = p->size;
+			res = p;
+		}
+		p = p -> next;
+	}
+	if(free_max < size)
+	{
+		cout << "Couldn't find a block that is bigger than size" << endl;
+		return NULL;
+	}
+	block *remain = new block;
+	remain->start = res->start + size;
+	remain->size = res->size - size;
+	remain->is_used = false;
+	remain->prev = res;
+	remain->next = res->next;
+	res->size = size;
+	res->next = remain;	
+	res->is_used = true;
+	return res;
+}
+
+void print_block()
+{
+	block *p = first;
+	while(p!=NULL)
+	{
+		cout << "start location = " << p->start << " size = " << p->size <<" is_used = " << p->is_used << endl;
+		p = p->next;
+	}
+}
+
+void free(block *f)
+{
+	f->is_used = false;
+	block *prev = f->prev,*next = f->next;
+	if(prev != NULL && prev->is_used == false)
+	{
+		prev->size = prev->size + f->size;
+		prev->next = f->next;
+		f = prev; 
+	}
+	if(next != NULL && next->is_used == false)
+	{
+		f->size = f->size + next->size;
+		f->next = next->next;
+	}
+}
+int main()
+{
+	mm_init(0,1024);
+	cout << "before malloc the memory is " << endl;
+	print_block();
+	cout << endl;
+	cout << "最差匹配算法，先分配100，在分配200，释放100，再分配50" << endl;
+	block *a1 = malloc(100);
+	block *a2 = malloc(200);
+	print_block();
+	free(a1);
+	print_block();
+	malloc(50);
+	print_block();
+	return 0;
+}
+```
+> 运行结果如下，可以发现当有100和724两个空闲快同时存在的时候，分配50的时候选择了后者
+
+```
+before malloc the memory is
+start location = 0 size = 1024 is_used = 0
+
+最差匹配算法，先分配100，在分配200，释放100，再分配50
+start location = 0 size = 100 is_used = 1
+start location = 100 size = 200 is_used = 1
+start location = 300 size = 724 is_used = 0
+start location = 0 size = 100 is_used = 0
+start location = 100 size = 200 is_used = 1
+start location = 300 size = 724 is_used = 0
+start location = 0 size = 100 is_used = 0
+start location = 100 size = 200 is_used = 1
+start location = 300 size = 50 is_used = 1
+start location = 350 size = 674 is_used = 0
+
+--------------------------------
+Process exited with return value 0
+Press any key to continue . . .
+```
 
 ---
 
