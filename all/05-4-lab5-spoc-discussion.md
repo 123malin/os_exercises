@@ -8,13 +8,8 @@
 ### 总体介绍
 
  - 第一个用户进程创建有什么特殊的？
- > 手动创建
-
  - 系统调用的参数传递过程？
- > 寄存器传递和栈传递(参数在用户态的栈里,内核栈可以访问用户态的栈)
-
  - getpid的返回值放在什么地方了？
- > 返回地址放在eax里
 
 ### 进程的内存布局
 
@@ -49,6 +44,20 @@
 
 https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with-grub2-in-udisk.md
 
+> 注意，grub_kernel的源码在ucore_lab的lab1_X的git branch上，位于 `ucore_lab/labcodes_answer/lab1_result`
+
+```
+格式化u盘为 FAT32格式 。
+
+将 U 盘挂载到 /media/MULTIBOOT 然后在 U 盘上安装 grub2 。然后按照提示创建 grub.cfg 如下。
+
+menuentry 'ucore-lab1' {
+    knetbsd /boot/grub_kernel
+}
+这个过程中应仔细选择操作，防止电脑像我一样被格式化-_-
+把编译好的内核拷贝到 ./boot 目录下即可使用。
+```
+
 (报告可课后完成)请理解grub multiboot spec的含义，并分析ucore_lab是如何实现符合grub multiboot spec的，并形成spoc练习报告。
 
 ### (2)(spoc) 理解用户进程的生命周期。
@@ -56,6 +65,7 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 > 需写练习报告和简单编码，完成后放到git server 对应的git repo中
 
 ### 练习用的[lab5 spoc exercise project source code](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab5/lab5-spoc-discuss)
+
 
 #### 掌握知识点
 1. 用户进程的启动、运行、就绪、等待、退出
@@ -71,3 +81,7 @@ https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-boot-with
 能够把个人思考题和上述知识点中的内容展示出来：即在ucore运行过程中通过`cprintf`函数来完整地展现出来进程A相关的动态执行和内部数据/状态变化的细节。(约全面细致约好)
 
 请完成如下练习，完成代码填写，并形成spoc练习报告
+
+```
+见ucore/relative_info/lab5
+```

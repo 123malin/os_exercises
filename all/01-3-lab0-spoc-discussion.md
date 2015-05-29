@@ -109,9 +109,21 @@ O. 根据服务器的地址创建本地git与服务器的地址关联
 > 65538
 
 请分析 [list.h](https://github.com/chyyuu/ucore_lab/blob/master/labcodes/lab2/libs/list.h)内容中大致的含义，并能include这个文件，利用其结构和功能编写一个数据结构链表操作的小C程序
-- [x] 
 
-> 
+```
+#include "list.h"
+
+int main()
+{
+	list_entry_t *a,*b,*c,*d;
+	list_init(a);
+	list_add(a,b);
+	list_add_before(a,c);
+	list_add_after(a,d);
+	list_del(a);
+	return 0;
+}
+```
 
 ---## 开放思考题---
 
@@ -120,3 +132,4 @@ O. 根据服务器的地址创建本地git与服务器的地址关联
 
 >  
 ---
+

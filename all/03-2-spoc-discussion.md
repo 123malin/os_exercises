@@ -80,7 +80,11 @@ Virtual Address 7268:
     --> pte index:0x13  pte contents:(valid 1, pfn 0x65)
       --> Translates to Physical Address 0xca8 --> Value: 16
 ```
-> 答：Virtual Address 6c74:
+
+> 答案为：
+
+```
+	Virtual Address 6c74:
 	--> pde index:0x1b  pde contents:(valid 1, pfn 0x20)
 	--> pte index:0x3  pte contents:(valid 1, pfn 0x61)
 	--> Translates to Physical Address 0x6114 --> Value:6
@@ -119,7 +123,7 @@ Virtual Address 7268:
 	--> pde index:0x1d  pde contents:(valid 1, pfn 0x0)
 	--> pte index:0x4  pte contents:(valid 0, pfn 0x7f)
 	Fault (page directory entry not valid)
-
+```
 
 （3）请基于你对原理课二级页表的理解，并参考Lab2建页表的过程，设计一个应用程序（可基于python, ruby, C, C++，LISP等）可模拟实现(2)题中描述的抽象OS，可正确完成二级页表转换。
 
@@ -134,3 +138,4 @@ Virtual Address 7268:
 阅读64bit IBM Powerpc CPU架构是如何实现[反置页表](http://en.wikipedia.org/wiki/Page_table#Inverted_page_table)，给出分析报告。
 
 --- 
+
